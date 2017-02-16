@@ -12,7 +12,7 @@ pathdir='../echoRD/' #path to echoRD
 lib_path = os.path.abspath(pathdir)
 sys.path.append(lib_path)
 import vG_conv as vG
-from hydro_tools import plotparticles_t,hydroprofile,plotparticles_specht
+from hydro_tools import plotparticles_t,hydroprofile,plotparticles_weier
 
 
 
@@ -125,7 +125,7 @@ dummy=np.floor(t_end/output)
 t=0.
 #loop through plot cycles
 for i in np.arange(dummy.astype(int)):
-    plotparticles_specht(particles,mc,pdyn,vG,runname,t,i,saving=True,relative=False,wdir=wdir)
+    plotparticles_weier(particles,mc,pdyn,vG,runname,t,i,saving=True,relative=False,wdir=wdir)
     [particles,npart,thS,leftover,drained,t]=rE.CAOSpy_rundx1(i*output,(i+1)*output,mc,pdyn,cinf,precTS,particles,leftover,drained,6.,splitfac=4,prec_2D=False,maccoat=macscale,saveDT=saveDT,clogswitch=clogswitch,infilt_method=infiltmeth,exfilt_method=exfiltmeth,film=film,infiltscale=infiltscale)
     
     if i/10.==np.round(i/10.):
