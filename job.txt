@@ -1,0 +1,2 @@
+job_submit -t 4320 -m 12000 -c p -p 1 -N C:jackisch@kit.edu -i weierbach_x.py python
+job_submit -t 4320 -m 12000 -c p -p 1 -N C:jackisch@kit.edu -i weierbach_y.py python
