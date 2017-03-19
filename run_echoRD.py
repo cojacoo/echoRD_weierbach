@@ -141,12 +141,7 @@ def CAOSpy_rundx1(tstart,tstop,mc,pdyn,cinf,precTS,particles,leftover=0,drained=
         #DIFFUSION
         #[particles,thS,npart,phi_mx]=pdyn.part_diffusion_split(particles,npart,thS,mc,dt,False,splitfac,vertcalfac,latcalfac)
         #[particles,thS,npart,phi_mx]=pdyn.part_diffusion_binned(particles,npart,thS,mc,dt)
-        if any(~(particles.lat>0.)):
-            print('Particles lat position skrewed!')
-            print(particles.lat[~(particles.lat>0.)])
-            print(p_inf)
-            print(timenow)
-
+        
         [particles,thS,npart,phi_mx]=pdyn.part_diffusion_binned_pd(particles,npart,thS,mc)
         #ADVECTION
         if not particles.loc[(particles.flag>0) & (particles.flag<len(mc.maccols)+1)].empty:
@@ -173,6 +168,17 @@ def CAOSpy_rundx1(tstart,tstop,mc,pdyn,cinf,precTS,particles,leftover=0,drained=
         timenow=timenow+mc.dt
 
     return(particles,npart,thS,leftover,drained,timenow)
+
+def part_store(particles,mc):
+    dummy_n2=pd.Series(np.zeros(mc.mgrid.cells),index=np.arange(mc.mgrid.cells))
+    dummy_o2=pd.Series(np.zeros(mc.mgrid.cells),index=np.arange(mc.mgrid.cells))
+    dummy_n=particles.loc[((particles.age>0.)),'cell'].value_counts().sort_index()
+    dummy_o=particles.loc[((particles.age<=0.)),'cell'].value_counts().sort_index()
+    dummy_n2.loc[dummy_n.index]+=dummy_n
+    dummy_o2.loc[dummy_o.index]+=dummy_o
+    dummy=pd.concat([dummy_n2,dummy_o2],axis=1)
+    dummy.columns=['new','old']
+    return dummy.values
 
 #define plot routine for macropore states
 def plot_mac(particles,savef=False):
