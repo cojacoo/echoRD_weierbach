@@ -42,7 +42,7 @@ precTS.intense=precTS.total/(precTS.tend-precTS.tstart)
 
 
 #use modified routines for binned retention definitions
-mc.part_sizefac=500
+mc.part_sizefac=250
 mc.gridcellA=mc.mgrid.vertfac*mc.mgrid.latfac
 mc.particleA=abs(mc.gridcellA.values)/(2*mc.part_sizefac) #assume average ks at about 0.5 as reference of particle size
 mc.particleD=2.*np.sqrt(mc.particleA/np.pi)
