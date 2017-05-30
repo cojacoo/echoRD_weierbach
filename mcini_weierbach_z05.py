@@ -4,19 +4,21 @@
 wd='.'                      #working_directory
 precf='irr_weier1.dat'    #top_boundary_flux_precip
 etf='etp.dat'               #top_boundary_flux_etp
-inimf='ini_moist2.dat'  #initial_moisture
+inimf='ini_moist5.dat'  #initial_moisture
 outdir='out'                #output_directory [not used while testing]
-t_end=864                   #end_time[s] [not used while testing]
+t_end=3*3600                   #end_time[s] [not used while testing]
+t_out=10
 part_sizefac=500             #particle_sized_definition_factor
 grid_sizefac=0.005           #grid_size_definition_factor [m]
 subsfac=10                  #subsampling_rate [percent] [deprecated]
 macscalefac=100             #scaling factor converting macropore space and particle size 
 t_dini=5.                   #initial_time_step[s]
-t_dmx=12.                   #maximal_time_step[s]
+t_dmx=10.                   #maximal_time_step[s]
 t_dmn=0.01                  #minimal_time_step[s]
 refarea=1.                  #reference_area_of_obs[m2]
 soildepth=-0.7              #depth_of_soil_column[m]
 smooth=(3,3)                #smoothing window for thS calculations as no. of cells
+stochsoil='stoch_modelg05.h5'
 
 #macropore 
 macbf='macbase.dat'         #macropore definition file [deprecated]
