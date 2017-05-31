@@ -1,9 +1,9 @@
 #!/bin/bash
-#PBS -l nodes=1:ppn=2
+#PBS -l nodes=1:ppn=3
 #PBS -l walltime=24:00:00
-#PBS -l mem=40gb
+#PBS -l mem=48gb
 #PBS -S /bin/bash
-#PBS -N echoRD_weier
+#PBS -N echoRD_weier3
 #PBS -j oe
 #PBS -o LOG_weier2
 #PBS -n
@@ -28,5 +28,6 @@ module load lib/matplotlib
 module load lib/pandas
 module load numlib/scipy
 
-python weiher_05.py &
-python weiher_025.py
+python weiher_10a.py &
+python weiher_05a.py &
+python weiher_025a.py
