@@ -26,7 +26,7 @@ import run_echoRD as rE
 [dr,mc,mcp,pdyn,cinf,vG]=rE.loadconnect(pathdir='../',mcinif='mcini_weierbach_z05',experimental=True)
 mc = mcp.mcpick_out(mc,'weierbach_z05.pickle3')
 
-runname='weiherbach_z05'
+runname='weiherbach_y05'
 
 mc.advectref='Shipitalo'
 
