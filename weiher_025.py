@@ -96,7 +96,7 @@ infiltscale=False
 #import profile
 #%prun -D diff_pd_prof.prof pdyn.part_diffusion_binned_pd(particles,npart,thS,mc)
 
-wdir='/beegfs/work/ka_oj4748/weierbach'
+wdir='/beegfs/work/ka_oj4748/echoRD_weierbach'
 drained=pd.DataFrame(np.array([]))
 leftover=0
 output=mc.t_out #mind to set also in TXstore.index definition
