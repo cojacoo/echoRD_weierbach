@@ -70,11 +70,11 @@ def echoRD_job(mcinif='mcini',mcpick='mc.pickle3',runname='test',
         mc.particleV=3./4.*np.pi*(mc.particleD/2.)**3.
         mc.particleD/=np.sqrt(abs(mc.gridcellA.values))
         mc.particleV/=np.sqrt(abs(mc.gridcellA.values)) #assume grid size as 3rd dimension
-        mc.particlemass=waterdensity(np.array(20),np.array(-9999))*mc.particleV #assume 20C as reference for particle mass
+        mc.particlemass=dr.waterdensity(np.array(20),np.array(-9999))*mc.particleV #assume 20C as reference for particle mass
                                                                             #DEBUG: a) we assume 2D=3D; b) change 20C to annual mean T?
         #initialise bins and slopes
-        mc=ini_bins(mc)
-        mc=mc_diffs(mc,np.max(np.max(mc.mxbin)))
+        mc=dr.ini_bins(mc)
+        mc=dr.mc_diffs(mc,np.max(np.max(mc.mxbin)))
 
         # estimate macropore capacity as relative share of space (as particle volume is not well-defined for the 1D-2D-3D references)
         mc.maccap=np.ceil((2.*mc.md_area/(-mc.gridcellA.values*mc.mgrid.latgrid.values))*mc.part_sizefac)
