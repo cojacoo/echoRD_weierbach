@@ -18,7 +18,7 @@ def echoRD_job(mcinif='mcini',mcpick='mc.pickle3',runname='test',
     exfilM  -- Exfiltration from macropores [Ediss | RWdiff]
     saveDT  -- optional modified time steps [True | int (factor) | double (static step)]
     '''
-    
+
     import numpy as np
     import pandas as pd
     import scipy as sp
@@ -29,7 +29,7 @@ def echoRD_job(mcinif='mcini',mcpick='mc.pickle3',runname='test',
     try:
         import cPickle as pickle
     except:
-    import pickle
+        import pickle
     
     #connect echoRD Tools
     lib_path = os.path.abspath(pathdir)
