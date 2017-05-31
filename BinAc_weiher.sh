@@ -28,5 +28,5 @@ module load lib/matplotlib
 module load lib/pandas
 module load numlib/scipy
 
-python weiher_025.py &
-python weiher_05.py
+python weiher_025a.py &
+python weiher_05a.py
