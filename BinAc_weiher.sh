@@ -5,7 +5,7 @@
 #PBS -S /bin/bash
 #PBS -N echoRD_weier
 #PBS -j oe
-#PBS -o LOG_weier
+#PBS -o LOG_weier2
 #PBS -n
 
 #cd /beegfs/work/ka_oj4748
