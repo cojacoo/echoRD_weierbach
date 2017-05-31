@@ -1,7 +1,7 @@
 def echoRD_job(mcinif='mcini',mcpick='mc.pickle3',runname='test',
                wdir='./',pathdir='../echoRD/',saveDT=True,
                aref='Shipitalo',LTEdef='instant',infilM='MDA',exfilM='Ediss',
-               parallel=False):
+               parallel=False,largepick=False):
     '''
     This is a wrapper for running echoRD easily.
     Be warned that some definitions are implicit in this wrapper
@@ -18,6 +18,9 @@ def echoRD_job(mcinif='mcini',mcpick='mc.pickle3',runname='test',
     LTEdef  -- Infiltration assumption [instant | ks | random]
     exfilM  -- Exfiltration from macropores [Ediss | RWdiff]
     saveDT  -- optional modified time steps [True | int (factor) | double (static step)]
+
+    parallel-- flag for parallel initialisation of particles
+    largepick- flag for pickling many particles
     '''
 
     import numpy as np
@@ -52,12 +55,20 @@ def echoRD_job(mcinif='mcini',mcpick='mc.pickle3',runname='test',
     #check for previous runs to hook into
     try:
         #unpickle:
-        with open(''.join([wdir,'/results/Z',runname,'_Mstat.pick']),'rb') as handle:
-            pickle_l = pickle.load(handle)
-            dummyx = pickle.loads(pickle_l)
-            particles = pickle.loads(dummyx[0])
-            [leftover,drained,t,TSstore,thetastore,npart,ix] = pickle.loads(dummyx[1])
-            ix+=1
+        if largepick:
+            with open(''.join([wdir,'/results/L',runname,'_Mstat.pick']),'rb') as handle:
+                pickle_l = pickle.load(handle)
+                dummyx = pickle.loads(pickle_l)
+                particles = pickle.loads(dummyx[0])
+                [t,ix] = pickle.loads(dummyx[1])
+                ix+=1
+        else:
+            with open(''.join([wdir,'/results/Z',runname,'_Mstat.pick']),'rb') as handle:
+                pickle_l = pickle.load(handle)
+                dummyx = pickle.loads(pickle_l)
+                particles = pickle.loads(dummyx[0])
+                [leftover,drained,t,TSstore,thetastore,npart,ix] = pickle.loads(dummyx[1])
+                ix+=1
         print('resuming into stored run at t='+str(t)+'...')
 
         # define particle size
@@ -81,6 +92,8 @@ def echoRD_job(mcinif='mcini',mcpick='mc.pickle3',runname='test',
         mc.mactopfill=np.ceil((2.*mc.md_area/(-mc.gridcellA.values*mc.mgrid.latgrid.values))*mc.part_sizefac)[:,0]*0. #all empty
         # assumption: the pore space is converted into particles through mc.part_sizefac. this is now reprojected to the macropore by using the areal share of the macropores
         # DEBUG: there is still some inconcistency about the areas and volumes, but it may be a valid estimate with rather few assumptions
+        if largepick:
+            [thS,npart]=pdyn.gridupdate_thS(particles.lat,particles.z,mc)
 
         mc.mgrid['cells']=len(npart.ravel())
     except:
@@ -131,6 +144,10 @@ def echoRD_job(mcinif='mcini',mcpick='mc.pickle3',runname='test',
         TSstore[i,:,:]=rE.part_store(particles,mc)
         thetastore[i,:,:]=np.reshape((mc.soilmatrix.loc[mc.soilgrid.ravel()-1,'tr']+(mc.soilmatrix.ts-mc.soilmatrix.tr)[mc.soilgrid.ravel()-1]*thS.ravel()*0.01).values,np.shape(thS))
 
-        with open(''.join([wdir,'/results/Z',runname,'_Mstat.pick']),'wb') as handle:
-        	pickle.dump(pickle.dumps([pickle.dumps(particles),pickle.dumps([leftover,drained,t,TSstore,thetastore,npart,i])]), handle, protocol=2)
+        if largepick:
+            with open(''.join([wdir,'/results/L',runname,'_Mstat.pick']),'wb') as handle:
+               pickle.dump(pickle.dumps([pickle.dumps(particles),pickle.dumps([t,i])]), handle, protocol=2)
+        else:
+            with open(''.join([wdir,'/results/Z',runname,'_Mstat.pick']),'wb') as handle:
+               pickle.dump(pickle.dumps([pickle.dumps(particles),pickle.dumps([leftover,drained,t,TSstore,thetastore,npart,i])]), handle, protocol=2)
 
