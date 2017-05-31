@@ -53,7 +53,7 @@ def echoRD_job(mcinif='mcini',mcpick='mc.pickle3',runname='test',
     try:
         #unpickle:
         with open(''.join([wdir,'/results/Z',runname,'_Mstat.pick']),'rb') as handle:
-            pickle_l = pickle.load(handle, protocol=2)
+            pickle_l = pickle.load(handle)
             dummyx = pickle.loads(pickle_l)
             particles = pickle.loads(dummyx[0])
             [leftover,drained,t,TSstore,thetastore,npart,ix] = pickle.loads(dummyx[1])
