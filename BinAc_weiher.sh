@@ -1,11 +1,11 @@
 #!/bin/bash
-#PBS -l nodes=1:ppn=3
-#PBS -l walltime=24:00:00
+#PBS -l nodes=1:ppn=2
+#PBS -l walltime=72:00:00
 #PBS -l mem=48gb
 #PBS -S /bin/bash
 #PBS -N echoRD_weier3
 #PBS -j oe
-#PBS -o LOG_weier2
+#PBS -o LOG_weier3
 #PBS -n
 
 #cd /beegfs/work/ka_oj4748
