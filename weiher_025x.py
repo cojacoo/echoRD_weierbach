@@ -11,4 +11,4 @@ import numpy as np
 sys.path.append(pathdir)
 
 import run_echoRD as rE
-rE.echoRD_job(mcinif=mcinif, mcpick=mcpick, runname=runname, update_mf=update_mf, wdir=wdir, pathdir=pathdir, hdf5pick=True, macscale=macscale, fsize=(2.5,4),w_rat=[3.5,0.6],h_rat=[0.8,9])
+rE.echoRD_job(mcinif=mcinif, mcpick=mcpick, runname=runname, wdir=wdir, pathdir=pathdir, hdf5pick=True, fsize=(2.5,4),w_rat=[3.5,0.6],h_rat=[0.8,9])
