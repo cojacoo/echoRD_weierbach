@@ -21,6 +21,7 @@ echo "Weiherbach with HDF5"
 echo "- - - - - - - - - - -\n"
 
 cd /beegfs/work/ka_oj4748/echoRD_weierbach
-source activate /home/ka/ka_iwg/ka_oj4748/miniconda3/envs/test_h5py
+export PATH=$PATH:$HOME/miniconda3/bin/
+source activate test_h5py
 
 python weiher_025x.py 
