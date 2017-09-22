@@ -21,11 +21,6 @@ echo "Weiherbach with HDF5"
 echo "- - - - - - - - - - -\n"
 
 cd /beegfs/work/ka_oj4748/echoRD_weierbach
-
-module load devel/python/3.5.1
-module load numlib/numpy
-module load lib/matplotlib
-module load lib/pandas
-module load numlib/scipy
+source activate /home/ka/ka_iwg/ka_oj4748/miniconda3/envs/test_h5py
 
 python weiher_025x.py 
