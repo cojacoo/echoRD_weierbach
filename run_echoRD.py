@@ -25,7 +25,7 @@ def loadconnect(pathdir='./', mcinif='mcini', oldvers=False, experimental=False)
             import mcpickle2 as mcp
     import infilt as cinf
     if experimental:
-        import partdyn_d5 as pdyn
+        import partdyn_d6 as pdyn
     else:
         import partdyn_d2 as pdyn
     mc = __import__(mcinif)
@@ -276,6 +276,11 @@ def echoRD_job(mcinif='mcini',mcpick='mc.pickle3',runname='test',
     if update_prec:
         precTS.total=update_prec
         precTS.intense=precTS.total/(precTS.tend-precTS.tstart)
+
+    #check for NaNs in lookup table for first bins and set to next filled ones:
+    for i in np.arange(np.shape(mc.D)[1]):
+        idx=np.where(np.isnan(mc.D[:,i]))[0]
+        mc.D[idx,i]=mc.D[np.amax(idx)+1,i]
 
     #check for previous runs to hook into
     try:
