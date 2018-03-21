@@ -9,11 +9,10 @@ except:
    import pickle
 import h5py
 #connect echoRD Tools
-pathdir='$PATH:$HOME/echoRD/echoRD/' #path to echoRD
-#pathdir='../echoRD/' #path to echoRD
-
-lib_path = os.path.abspath(pathdir)
-sys.path.append(lib_path)
+pathdir='../echoRD/' #path to echoRD
+sys.path.append(pathdir)
+#lib_path = os.path.abspath(pathdir)
+#sys.path.append(lib_path)
 import vG_conv as vG
 from hydro_tools import plotparticles_t,hydroprofile,plotparticles_weier
 
