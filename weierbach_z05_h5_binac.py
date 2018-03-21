@@ -9,7 +9,7 @@ except:
    import pickle
 import h5py
 #connect echoRD Tools
-pathdir='~/echoRD/' #path to echoRD
+pathdir='$PATH:$HOME/echoRD/echoRD/' #path to echoRD
 #pathdir='../echoRD/' #path to echoRD
 
 lib_path = os.path.abspath(pathdir)
