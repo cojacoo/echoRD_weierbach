@@ -1,9 +1,9 @@
 #!/bin/bash
-#PBS -l nodes=1:ppn=1
-#PBS -l walltime=02:00:00
+#PBS -l nodes=1:ppn=10
+#PBS -l walltime=72:00:00
 #PBS -l mem=48gb
 #PBS -S /bin/bash
-#PBS -N echoRD_weiher_hdf_test
+#PBS -N echoRD_weiher_hdf
 #PBS -j oe
 #PBS -o LOG_weiher_hdf
 #PBS -n
