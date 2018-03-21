@@ -7,6 +7,7 @@ try:
    import cPickle as pickle
 except:
    import pickle
+import h5py
 #connect echoRD Tools
 pathdir='../echoRD/' #path to echoRD
 lib_path = os.path.abspath(pathdir)
@@ -24,7 +25,7 @@ import run_echoRD as rE
 [dr,mc,mcp,pdyn,cinf,vG]=rE.loadconnect(pathdir='../',mcinif='mcini_weierbach_z05',experimental=True)
 mc = mcp.mcpick_out(mc,'weierbach_z05.pickle3')
 
-runname='weierbach_z05a'
+runname='weierbach_z05x'
 
 mc.advectref='Shipitalo'
 mc.soilmatrix=pd.read_csv(mc.matrixbf, sep=' ')
@@ -54,7 +55,13 @@ mc.particlemass=dr.waterdensity(np.array(20),np.array(-9999))*mc.particleV #assu
 mc=dr.ini_bins(mc)
 mc=dr.mc_diffs(mc,np.max(np.max(mc.mxbin)))
 
-[mc,particles,npart]=dr.particle_setup(mc,True)
+try:
+    [mc,particles,npart]=dr.particle_setup(mc,True,False)
+    particles = pd.read_hdf('./results/P_' + runname + '.h5', 'table')
+    print('read particle positions from '+'./results/P_' + runname + '.h5')
+except:
+    [mc,particles,npart]=dr.particle_setup(mc,True)
+    print('setup new inital particles')
 
 #define bin assignment mode for infiltration particles
 mc.LTEdef='instant'#'ks' #'instant' #'random'
@@ -108,24 +115,23 @@ infiltscale=False
 wdir='./'
 drained=pd.DataFrame(np.array([]))
 leftover=0
-output=6. #mind to set also in TXstore.index definition
+output=60. #mind to set also in TXstore.index definition
 
 dummy=np.floor(t_end/output)
 t=0.
 ix=0
 TSstore=np.zeros((int(dummy),mc.mgrid.cells[0],2))
 
-# try:
-#     #unpickle:
-#     with open(''.join([wdir,'/results/Z',runname,'_Mstat.pick']),'rb') as handle:
-#         pickle_l = pickle.load(handle)
-#         dummyx = pickle.loads(pickle_l)
-#         particles = pickle.loads(dummyx[0])
-#         [leftover,drained,t,TSstore,ix] = pickle.loads(dummyx[1])
-#         ix+=1
-#     print('resuming into stored run at t='+str(t)+'...')
-# except:
-#     print('starting new run...')
+try:
+    #load h5:
+    with h5py.File(mc.stochsoil, 'r') as f:
+        [t, n_particles, leftover, n_drained, ix] = f["states"]
+    print('resuming into stored run at t='+str(t)+'...')
+except:
+    print('starting new run...')
+    with h5py.File('./results/S_'+runname+'.h5', 'w') as f:
+        dset = f.create_dataset("states", (1,5), dtype='f')
+        dset[:] =  [t, len(particles), leftover, len(drained), ix]
 
 #final check of lookup references
 mc = rE.check_lookups(mc)
@@ -137,19 +143,13 @@ for i in np.arange(dummy.astype(int))[ix:]:
     TSstore[i,:,:]=rE.part_store(particles,mc)
     
     if i/5.==np.round(i/5.):
-        with open(''.join([wdir,'/results/Z',runname,'_Mstat.pick']),'wb') as handle:
-            pickle.dump(pickle.dumps([pickle.dumps(particles),pickle.dumps([leftover,drained,t,TSstore,i])]), handle, protocol=2)
+        particles.to_hdf('./results/P_' + runname + '.h5', 'table')
 
-    #pickle at reference states
-    if i==29:
-        with open(''.join([wdir,'/results/30_',runname,'_Mstat.pick']),'wb') as handle:
-            pickle.dump(pickle.dumps([pickle.dumps(particles),pickle.dumps([leftover,drained,t,TSstore,i])]), handle, protocol=2)
-    if i==59:
-        with open(''.join([wdir,'/results/60_',runname,'_Mstat.pick']),'wb') as handle:
-            pickle.dump(pickle.dumps([pickle.dumps(particles),pickle.dumps([leftover,drained,t,TSstore,i])]), handle, protocol=2)
-    if i==119:
-        with open(''.join([wdir,'/results/120_',runname,'_Mstat.pick']),'wb') as handle:
-            pickle.dump(pickle.dumps([pickle.dumps(particles),pickle.dumps([leftover,drained,t,TSstore,i])]), handle, protocol=2)
-    if i==239:
-        with open(''.join([wdir,'/results/240_',runname,'_Mstat.pick']),'wb') as handle:
-            pickle.dump(pickle.dumps([pickle.dumps(particles),pickle.dumps([leftover,drained,t,TSstore,i])]), handle, protocol=2)
+        with h5py.File(mc.stochsoil, 'r+') as f:
+            dset = f["theta"]
+            dset[:, :, i] = np.reshape((mc.soilmatrix.loc[mc.soilgrid.ravel() - 1, 'tr'] + (mc.soilmatrix.ts - mc.soilmatrix.tr)[mc.soilgrid.ravel() - 1] * thS.ravel() * 0.01).values, np.shape(thS))
+
+        with h5py.File('./results/S_'+runname+'.h5', 'r+') as f:
+            dset = f["states"]
+            dset = [t, len(particles), leftover, len(drained), ix]
+
