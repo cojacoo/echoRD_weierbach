@@ -115,7 +115,7 @@ infiltscale=False
 wdir='./'
 drained=pd.DataFrame(np.array([]))
 leftover=0
-output=60. #mind to set also in TXstore.index definition
+output=10. #mind to set also in TXstore.index definition
 
 dummy=np.floor(t_end/output)
 t=0.
@@ -125,7 +125,7 @@ TSstore=np.zeros((int(dummy),mc.mgrid.cells[0],2))
 try:
     #load h5:
     with h5py.File(mc.stochsoil, 'r') as f:
-        [t, n_particles, leftover, n_drained, ix] = f["states"]
+        [t, n_particles, leftover, n_drained, ix] = f["states"].values[0]
     print('resuming into stored run at t='+str(t)+'...')
 except:
     print('starting new run...')
@@ -136,20 +136,23 @@ except:
 #final check of lookup references
 mc = rE.check_lookups(mc)
 
+#debug:
+ix=34
+
 #loop through plot cycles
 for i in np.arange(dummy.astype(int))[ix:]:
     plotparticles_weier(particles,mc,pdyn,vG,runname,t,i,saving=True,relative=False,wdir=wdir)
     [particles,npart,thS,leftover,drained,t]=rE.CAOSpy_rundx1(i*output,(i+1)*output,mc,pdyn,cinf,precTS,particles,leftover,drained,6.,splitfac=4,prec_2D=False,maccoat=macscale,saveDT=saveDT,clogswitch=clogswitch,infilt_method=infiltmeth,exfilt_method=exfiltmeth,film=film,infiltscale=infiltscale)
     TSstore[i,:,:]=rE.part_store(particles,mc)
     
-    if i/5.==np.round(i/5.):
-        particles.to_hdf('./results/P_' + runname + '.h5', 'table')
+    #if i/5.==np.round(i/5.):
+    particles.to_hdf('./results/P_' + runname + '.h5', 'table')
 
-        with h5py.File(mc.stochsoil, 'r+') as f:
-            dset = f["theta"]
-            dset[:, :, i] = np.reshape((mc.soilmatrix.loc[mc.soilgrid.ravel() - 1, 'tr'] + (mc.soilmatrix.ts - mc.soilmatrix.tr)[mc.soilgrid.ravel() - 1] * thS.ravel() * 0.01).values, np.shape(thS))
+    with h5py.File(mc.stochsoil, 'r+') as f:
+        dset = f["theta"]
+        dset[:, :, i] = np.reshape((mc.soilmatrix.loc[mc.soilgrid.ravel() - 1, 'tr'] + (mc.soilmatrix.ts - mc.soilmatrix.tr)[mc.soilgrid.ravel() - 1] * thS.ravel() * 0.01).values, np.shape(thS))
 
-        with h5py.File('./results/S_'+runname+'.h5', 'r+') as f:
-            dset = f["states"]
-            dset = [t, len(particles), leftover, len(drained), ix]
+    with h5py.File('./results/S_'+runname+'.h5', 'r+') as f:
+        dset = f["states"]
+        dset = [t, len(particles), leftover, len(drained), ix]
 

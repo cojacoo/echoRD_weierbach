@@ -22,6 +22,6 @@ echo "- - - - - - - - - - -\n"
 
 cd /beegfs/work/ka_oj4748/echoRD_weierbach
 export PATH=$PATH:$HOME/miniconda3/bin/
-source activate test_h5py
+#source activate test_h5py
 
 python weierbach_z05_h5_binac.py
