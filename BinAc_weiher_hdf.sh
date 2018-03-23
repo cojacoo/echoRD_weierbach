@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -l nodes=1:ppn=10
+#PBS -l nodes=1:ppn=3
 #PBS -l walltime=72:00:00
 #PBS -l mem=48gb
 #PBS -S /bin/bash
@@ -24,4 +24,6 @@ cd /beegfs/work/ka_oj4748/echoRD_weierbach
 export PATH=$PATH:$HOME/miniconda3/bin/
 #source activate test_h5py
 
-python weierbach_z05_h5_binac.py
+python weiher_05r_binac.py &
+python weierbach_X05_binac.py &
+python weierbach_Y05_binac.py

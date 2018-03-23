@@ -135,9 +135,10 @@ except:
 
 #final check of lookup references
 mc = rE.check_lookups(mc)
+particles.loc[(particles.flag>0) & (particles.advect==0),'advect'] = -0.0676
 
 #debug:
-ix=34
+ix=37
 
 #loop through plot cycles
 for i in np.arange(dummy.astype(int))[ix:]:
