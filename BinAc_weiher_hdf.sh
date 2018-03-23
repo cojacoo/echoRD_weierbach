@@ -24,6 +24,6 @@ cd /beegfs/work/ka_oj4748/echoRD_weierbach
 export PATH=$PATH:$HOME/miniconda3/bin/
 #source activate test_h5py
 
-python weiher_05r_binac.py &
-python weierbach_X05_binac.py &
-python weierbach_Y05_binac.py
+$HOME/miniconda3/bin/python weiher_05r_binac.py &
+$HOME/miniconda3/bin/python weierbach_X05_binac.py &
+$HOME/miniconda3/bin/python weierbach_Y05_binac.py
