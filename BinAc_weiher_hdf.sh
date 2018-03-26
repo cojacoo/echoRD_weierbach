@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -l nodes=1:ppn=3
-#PBS -l walltime=72:00:00
+#PBS -l walltime=120:00:00
 #PBS -l mem=48gb
 #PBS -S /bin/bash
 #PBS -N echoRD_weiher_hdf
