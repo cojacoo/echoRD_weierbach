@@ -5,7 +5,7 @@
 #PBS -S /bin/bash
 #PBS -N echoRD_weiher_hdf2
 #PBS -j oe
-#PBS -o LOG_weiher_hdf
+#PBS -o LOG_weiher_hdf2
 #PBS -n
 
 #cd /beegfs/work/ka_oj4748
